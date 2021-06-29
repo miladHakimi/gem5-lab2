@@ -49,7 +49,7 @@ int main(void) {
 
   acc = 0x01;
   printf("%d\n", acc);
-  while (acc != 0x4) {
+  while (acc != 0x0) {
     printf("%d\n", acc);
   }
 

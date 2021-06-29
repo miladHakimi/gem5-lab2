@@ -4,5 +4,5 @@
 void isr(void)
 {
 	printf("Interrupt\n\r");
-	common_val = 1;
+	acc = 0;
 }
