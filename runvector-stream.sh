@@ -1,15 +1,11 @@
 #!/bin/bash
-FLAGS="HWACC"
-BENCH=""
+FLAGS="HWACC,LLVMRuntime,StreamDma"
 DEBUG="false"
 PRINT_TO_FILE="false"
 
-while getopts ":b:f:dp" opt
+while getopts ":f:dp" opt
 	do
 		case $opt in
-			b )
-				BENCH=${OPTARG}
-				;;
 			d )
 				DEBUG="true"
 				;;
@@ -21,17 +17,10 @@ while getopts ":b:f:dp" opt
 				;;
 			* )
 				echo "Invalid argument: ${OPTARG}"
-				echo "Usage: $0 -b BENCHMARK (-f DEBUGFLAG) (-p) (-d)"
 				exit 1
 				;;
 		esac
 done
-
-if [ "${BENCH}" == "" ]; then
-	echo "No benchmark specified."
-	echo "Usage: $0 -b BENCHMARK (-f DEBUGFLAG) (-p) (-d)"
-	exit 2
-fi
 
 if [ "${DEBUG}" == "true" ]; then
 	BINARY="ddd --gdb --args ${M5_PATH}/build/ARM/gem5.debug"
@@ -39,23 +28,20 @@ else
 	BINARY="${M5_PATH}/build/ARM/gem5.opt"
 fi
 
-KERNEL=$LAB_PATH/benchmarks/$BENCH/host/main.elf
+KERNEL=$LAB_PATH/benchmarks/vector-stream/sw/main.elf
 SYS_OPTS="--mem-size=4GB \
           --kernel=$KERNEL \
           --disk-image=$M5_PATH/baremetal/common/fake.iso \
           --machine-type=VExpress_GEM5_V1 \
           --dtb-file=none --bare-metal \
           --cpu-type=DerivO3CPU"
-CACHE_OPTS="--caches --l2cache"
-# Script to start up full system simulation
-# --debug-flags=$FLAGS
+CACHE_OPTS="--caches --l2cache --acc_cache"
 
-OUTDIR=BM_ARM_OUT/$BENCH
+OUTDIR=BM_ARM_OUT/vector-stream
 
-RUN_SCRIPT="$BINARY --debug-flags=$FLAGS --outdir=$OUTDIR \
-			gem5-config/fs_vector_input.py $SYS_OPTS \
-			--accpath=$LAB_PATH/benchmarks \
-			--accbench=$BENCH $CACHE_OPTS"
+RUN_SCRIPT="$BINARY --outdir=$OUTDIR \
+			gem5-config/fs_vector.py $SYS_OPTS \
+			--accpath=$LAB_PATH/benchmarks $CACHE_OPTS"
 
 if [ "${PRINT_TO_FILE}" == "true" ]; then
 	mkdir -p $OUTDIR
