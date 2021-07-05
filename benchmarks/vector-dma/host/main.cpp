@@ -6,7 +6,6 @@
 
 #include "gemm.h"
 
-gemm_struct ges;
 
 int main(void) {
   m5_reset_stats();
