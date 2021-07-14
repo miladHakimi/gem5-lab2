@@ -18,6 +18,7 @@ int main(void) {
   TYPE *m2 = (TYPE *)(base + sizeof(TYPE) * N);
   TYPE *m3 = (TYPE *)(base + 2 * sizeof(TYPE) * N);
   TYPE *check = (TYPE *)(base+3*sizeof(TYPE)*N);
+  acc_A2 = 0x0;
   acc_A1 = 0x0;
   // register int sp asm("sp");
   // uint64_t base_input = 0x90c00000;
@@ -33,21 +34,21 @@ int main(void) {
   // Set up parameters for accelerators. 
   // Base address of m1, Base address of m2, Base address of result.
   // All addresses are in CPU space
-  val_a = (uint64_t)base;
-  val_b = (uint64_t)(base + sizeof(TYPE) * N);
-  val_c = (uint64_t)(base + 2 * sizeof(TYPE) * N);
+  val_a_A2 = (uint64_t)base;
+  val_b_A2 = (uint64_t)(base + sizeof(TYPE) * N);
+  val_c_A2 = (uint64_t)(base + 2 * sizeof(TYPE) * N);
 
-  printf("Acc Activated: %d\n", acc_A1);
-  acc_A1 = 0x01;
-  while (acc_A1 != 0x0) {
-    printf("Acc Status : %d\n", acc_A1);
+  printf("Acc Activated: %d\n", acc_A2);
+  acc_A2 = 0x01;
+  while (acc_A2 != 0x0) {
+    printf("Acc Status : %d\n", acc_A2);
   }
-  printf("Acc Done : %d\n", acc_A1);
+  printf("Acc Done : %d\n", acc_A2);
 
   #ifdef CHECK
    bool fail = false;
    for (int i = 0; i < N; i++) {
-     if (4*(m1[i] + m2[i]) != m3[i])
+     if (4*(m1[i] + m2[i]) == m3[i])
        {
        	printf("Expected : %ld  Actual : %ld\n",m1[i]+m2[i],m3[i]);
  	      fail = true;
