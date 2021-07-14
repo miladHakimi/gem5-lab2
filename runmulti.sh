@@ -53,7 +53,7 @@ CACHE_OPTS="--caches --l2cache --acc_cache"
 OUTDIR=BM_ARM_OUT/$BENCH
 
 RUN_SCRIPT="$BINARY --debug-flags=$FLAGS --outdir=$OUTDIR \
-			gem5-config/run_vector.py $SYS_OPTS \
+			gem5-config/run_multi.py $SYS_OPTS \
 			--accpath=$LAB_PATH/benchmarks \
 			--accbench=$BENCH $CACHE_OPTS"
 

@@ -40,7 +40,7 @@ CACHE_OPTS="--caches --l2cache --acc_cache"
 OUTDIR=BM_ARM_OUT/vector-stream
 
 RUN_SCRIPT="$BINARY --outdir=$OUTDIR \
-			gem5-config/fs_vector.py $SYS_OPTS \
+			gem5-config/run_vector_stream.py $SYS_OPTS \
 			--accpath=$LAB_PATH/benchmarks $CACHE_OPTS"
 
 if [ "${PRINT_TO_FILE}" == "true" ]; then
