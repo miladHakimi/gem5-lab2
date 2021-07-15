@@ -237,7 +237,7 @@ def build_test_system(np):
         MemConfig.config_mem(options, test_sys)
 
     if buildEnv['TARGET_ISA'] == "arm":
-        vector.makeHWAcc(options, test_sys)
+        vector_stream.makeHWAcc(options, test_sys)
 
     return test_sys
 
