@@ -1,4 +1,4 @@
-TARGET=gemm.ll top.ll
+TARGET=vector2.ll vector.ll top.ll
 %.o : %.c
 	clang -emit-llvm -c -o $@ $<
 %.bc : %.o

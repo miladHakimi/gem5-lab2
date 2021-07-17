@@ -16,7 +16,11 @@ int main(void) {
     TYPE *m1 = (TYPE *)base;
     TYPE *m2 = (TYPE *)(base + sizeof(TYPE) * N);
     TYPE *m3 = (TYPE *)(base + 2 * sizeof(TYPE) * N);
- 
+
+    for (int i = 0; i < N; i++) {
+        printf("%d", m1[i]);
+    }
+
     *val_a = (uint32_t)(void *)m1;
     *val_b = (uint32_t)(void *)m2;
     *val_c = (uint32_t)(void *)m3;
@@ -29,16 +33,8 @@ int main(void) {
 #ifdef CHECK
     printf("Checking result\n");
     for(int i=0; i<N; i++) {
-        if(m3[i] != m1[i]+m2[i]) {
-            printf("Expected:%f Actual:%f\n", m1[i]+m2[i], m3[i]);
-            fail = true;
-            break;
+            printf("Actual M3:%d \n", m3[i]);
         }
-    }
-    if(fail)
-        printf("Check Failed\n");
-    else
-        printf("Check Passed\n");
 #endif
 	m5_dump_stats();
 	m5_exit();

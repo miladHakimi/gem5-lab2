@@ -76,7 +76,7 @@ def makeHWAcc(options, system):
     system.acctest.acc_A2_Buffer.conf_table_reported = False
     system.acctest.acc_A2_Buffer.ready_mode=True
     system.acctest.acc_A2_Buffer.port = system.acctest.local_bus.master
-    for i in range(1):
+    for i in range(8):
         system.acctest.acc_A2.spm = system.acctest.acc_A2_Buffer.spm_ports
 
 
