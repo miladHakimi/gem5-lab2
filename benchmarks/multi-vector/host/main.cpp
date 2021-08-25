@@ -12,6 +12,7 @@ volatile uint32_t * val_c = (uint32_t *)0x2f000011;
 int main(void) {
 	m5_reset_stats();
     bool fail = false;
+    stage = 0;
     uint32_t base = 0x80c00000;
     TYPE *m1 = (TYPE *)base;
     TYPE *m2 = (TYPE *)(base + sizeof(TYPE) * N);
@@ -27,7 +28,7 @@ int main(void) {
     // printf("%d\n", *top);
     *top = 0x01;
     int count;
-    while (stage < 1)
+    while (top !=0)
         count++;
     printf("Job complete\n");
 #ifdef CHECK

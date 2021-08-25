@@ -55,8 +55,6 @@ from m5.util.fdthelper import *
 
 addToPath('../')
 
-from ruby import Ruby
-
 from common.FSConfig import *
 from common.SysPaths import *
 from common.Benchmarks import *
@@ -67,7 +65,7 @@ from common import MemConfig
 from common import ObjectList
 from common.Caches import *
 from common import Options
-import validate_acc
+import MultiHWAcc
 
 def cmd_line_template():
     if options.command_line and options.command_line_file:
@@ -239,7 +237,7 @@ def build_test_system(np):
         MemConfig.config_mem(options, test_sys)
 
     if buildEnv['TARGET_ISA'] == "arm":
-        validate_acc.makeHWAcc(options, test_sys)
+        MultiHWAcc.makeHWAcc(options, test_sys)
 
     return test_sys
 

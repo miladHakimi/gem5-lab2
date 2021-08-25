@@ -22,18 +22,34 @@ def makeHWAcc(options, system):
     system.acctest._connect_caches(system, options, l2coherent=True, cache_size = "32kB")
 
 
-    ############################# Adding Accelerators to Cluster ##################################
-
- # Add accelerator A1 to the cluster
-    acc_bench = options.accpath + "/" + options.accbench + "/" + "A1/bench/" + "A1.ll"
-
+     # Add accelerator top to the cluster
+    acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/" + "top.ll"
     # Specify the path to the config file for an accelerator
     # acc_config = <Absolute path to the config file>
-    acc_config = options.accpath + "/" + options.accbench + "/" + "A1/" + "config.ini"
+    acc_config = options.accpath + "/" + options.accbench + "/" + "hw/" + "top.ini"
 
     print(acc_config)
 
-    system.acctest.acc = CommInterface(devicename="A1")
+    system.acctest.top = CommInterface(devicename="top")
+
+    AccConfig(system.acctest.top, acc_config, acc_bench)
+    system.acctest.top.gic = system.realview.gic
+    system.acctest._connect_hwacc(system.acctest.top)
+    system.acctest.top.local = system.acctest.local_bus.slave
+    system.acctest.top.acp = system.acctest.coherency_bus.slave
+
+
+    ############################# Adding Accelerators to Cluster ##################################
+
+ # Add accelerator A1 to the cluster
+    acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/" + "vector.ll"
+    # Specify the path to the config file for an accelerator
+    # acc_config = <Absolute path to the config file>
+    acc_config = options.accpath + "/" + options.accbench + "/" + "hw/" + "vector.ini"
+
+    print(acc_config)
+
+    system.acctest.acc = CommInterface(devicename="vector")
     AccConfig(system.acctest.acc, acc_config, acc_bench)
 
     # Add an SPM for the accelerator
@@ -59,14 +75,14 @@ def makeHWAcc(options, system):
     ############################# Adding Accelerators to Cluster ##################################
 
     # Add accelerator A2 to the cluster
-    acc_A2_bench = options.accpath + "/" + options.accbench + "/" + "A2/bench/" + "A2.ll"
+    acc_A2_bench = options.accpath + "/" + options.accbench  + "/hw/" + "vector2.ll"
 
    #  # Specify the path to the config file for an accelerator
    #  # acc_config = <Absolute path to the config file>
-    acc_A2_config = options.accpath + "/" + options.accbench + "/" + "A2/" + "config.ini"
+    acc_A2_config = options.accpath + "/" + options.accbench + "/hw/" + "vector2.ini"
 
 
-    system.acctest.acc_A2 = CommInterface(devicename="A2")
+    system.acctest.acc_A2 = CommInterface(devicename="vector2")
     AccConfig(system.acctest.acc_A2, acc_A2_config, acc_A2_bench)
 
     # Add an SPM for the accelerator
