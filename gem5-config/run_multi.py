@@ -1,3 +1,45 @@
+# Copyright (c) 2010-2013, 2016, 2019 ARM Limited
+# All rights reserved.
+#
+# The license below extends only to copyright in the software and shall
+# not be construed as granting a license to any other intellectual
+# property including but not limited to intellectual property relating
+# to a hardware implementation of the functionality of the software
+# licensed hereunder.  You may use the software subject to the license
+# terms below provided that you ensure that this notice is replicated
+# unmodified and in its entirety in all distributions of the software,
+# modified or unmodified, in source code or in binary form.
+#
+# Copyright (c) 2012-2014 Mark D. Hill and David A. Wood
+# Copyright (c) 2009-2011 Advanced Micro Devices, Inc.
+# Copyright (c) 2006-2007 The Regents of The University of Michigan
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met: redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer;
+# redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution;
+# neither the name of the copyright holders nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Authors: Ali Saidi
+#          Brad Beckmann
 
 from __future__ import print_function
 from __future__ import absolute_import
@@ -13,7 +55,7 @@ from m5.util.fdthelper import *
 
 addToPath('../')
 
-# from ruby import Ruby
+from ruby import Ruby
 
 from common.FSConfig import *
 from common.SysPaths import *
@@ -25,7 +67,7 @@ from common import MemConfig
 from common import ObjectList
 from common.Caches import *
 from common import Options
-import MultiHWAcc
+import validate_acc
 
 def cmd_line_template():
     if options.command_line and options.command_line_file:
@@ -89,7 +131,7 @@ def build_test_system(np):
 
     if options.kernel is not None:
         test_sys.kernel = binary(options.kernel)
-        test_sys.kernel_extras = [os.environ["LAB_PATH"]+"/benchmarks/vector-dma/m0.bin",os.environ["LAB_PATH"]+"/benchmarks/vector-dma/m1.bin"]
+        test_sys.kernel_extras = [os.environ["LAB_PATH"]+"/benchmarks/inputs/m0.bin",os.environ["LAB_PATH"]+"/benchmarks/inputs/m1.bin"]
         test_sys.kernel_extras_addrs = [0x80c00000,0x80c00000+8*8]
     else:
         print("Error: a kernel must be provided to run in full system mode")
@@ -197,7 +239,7 @@ def build_test_system(np):
         MemConfig.config_mem(options, test_sys)
 
     if buildEnv['TARGET_ISA'] == "arm":
-        MultiHWAcc.makeHWAcc(options, test_sys)
+        validate_acc.makeHWAcc(options, test_sys)
 
     return test_sys
 
