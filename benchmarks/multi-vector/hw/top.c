@@ -45,10 +45,11 @@ void top(uint64_t m1_addr,
 	*DmaWrAddr = M1ADDR_V2;
 	*DmaCopyLen = vector_size;
 	*DmaFlags = DEV_INIT;
-	//Poll DMA for finish
+	// //Poll DMA for finish
 	while ((*DmaFlags & DEV_INTR) != DEV_INTR)
 		;
-	//Transfer M2
+	//	Transfer M2
+
 	*DmaRdAddr = M3ADDR;
 	*DmaWrAddr = M2ADDR_V2;
 	*DmaCopyLen = vector_size;
