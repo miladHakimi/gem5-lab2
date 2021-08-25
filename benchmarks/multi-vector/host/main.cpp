@@ -34,7 +34,11 @@ int main(void) {
 #ifdef CHECK
     printf("Checking result\n");
     for(int i=0; i<N; i++) {
-            printf("Actual M3:%d \n", m3[i]);
+        if (m3[i] != 8*(m1[i]+m2[i]))
+            {
+                printf("Check failed\n");
+                printf("Actual M3:%d \n", m3[i]);
+            }
         }
 #endif
 	m5_dump_stats();

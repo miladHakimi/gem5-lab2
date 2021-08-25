@@ -12,7 +12,8 @@ void top(uint64_t m1_addr,
 	volatile uint64_t *DmaRdAddr = (uint64_t *)(DMA + 1);
 	volatile uint64_t *DmaWrAddr = (uint64_t *)(DMA + 9);
 	volatile uint32_t *DmaCopyLen = (uint32_t *)(DMA + 17);
-
+	*GEMMFlags = 0x0;
+	*GEMMFlags_V2 = 0x0;
 	//Transfer Input Matrices
 	//Transfer M1
 	*DmaRdAddr = m1_addr;

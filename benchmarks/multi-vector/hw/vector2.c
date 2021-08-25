@@ -8,8 +8,8 @@ void gemm()
     TYPE *m2 = (TYPE *)m2base;
     TYPE *m3 = (TYPE *)m3base;
 #pragma clang loop unroll(full)
-    for (int k = 0; k < vector_size; k++)
+    for (int k = 0; k < N; k++)
     {
-        m3[k] = m1[k] * 4;
+        m3[k] = m1[k] * m2[k];
     }
 }
