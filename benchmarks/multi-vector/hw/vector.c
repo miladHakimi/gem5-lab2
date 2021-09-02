@@ -10,6 +10,6 @@ void gemm()
 #pragma clang loop unroll(full)
     for (int k = 0; k < N; k++)
     {
-        m3[k] = m1[k] + m2[k];
+        m3[k] = m1[k] * 8;
     }
 }
