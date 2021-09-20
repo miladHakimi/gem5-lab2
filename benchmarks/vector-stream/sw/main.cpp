@@ -3,6 +3,7 @@
 #include <cstring>
 #include "host.h"
 #include "../defines.h"
+#include "../../common/dma.h"
 #include "../../common/m5ops.h"
 
 #define input_addr       0x8c000000
