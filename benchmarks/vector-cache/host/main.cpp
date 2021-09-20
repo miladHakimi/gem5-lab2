@@ -3,10 +3,7 @@
 #include <cstring>
 #include "../../common/dma.h"
 #include "../../common/m5ops.h"
-
-#include "gemm.h"
-
-gemm_struct ges;
+#include "../defines.h"
 
 int main(void) {
   m5_reset_stats();

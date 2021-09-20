@@ -9,6 +9,7 @@
 #define STR_DMA_WR_INTR	0x20
 
 #include "inttypes.h"
+#include <stddef.h>
 
 #define dType_Reg		int32_t
 #define dType_8u		uint8_t
@@ -28,7 +29,7 @@
 
 
 
-void dmacpy(void * dst, void * src, int len) {
+inline void dmacpy(void * dst, void * src, int len) {
 volatile char * FLAGS = (char *)(MMR_ADDR);
 volatile size_t * SRC = (size_t *)(MMR_ADDR+1);
 volatile size_t * DST = (size_t *)(MMR_ADDR+9);
@@ -39,7 +40,7 @@ volatile int * LEN = (int *)(MMR_ADDR+17);
     *FLAGS |= 0x01;
 }
 
-int pollDma() {
+inline int pollDma() {
     volatile char * FLAGS = (char *)(MMR_ADDR);
 volatile size_t * SRC = (size_t *)(MMR_ADDR+1);
 volatile size_t * DST = (size_t *)(MMR_ADDR+9);
@@ -47,7 +48,7 @@ volatile int * LEN = (int *)(MMR_ADDR+17);
 
     return ((*FLAGS&0x04)==0x04);
 }
-void resetDma() {
+inline void resetDma() {
 volatile char * FLAGS = (char *)(MMR_ADDR);
 volatile size_t * SRC = (size_t *)(MMR_ADDR+1);
 volatile size_t * DST = (size_t *)(MMR_ADDR+9);

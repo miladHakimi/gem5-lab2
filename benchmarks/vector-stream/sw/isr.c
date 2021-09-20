@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "host.h"
+#include "../defines.h"
 
 void head_isr(void)
 {

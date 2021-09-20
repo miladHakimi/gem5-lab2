@@ -1,4 +1,4 @@
-#include "../../defines.h"
+#include "../../../common/dma.h"
 
 /***********************************************************
  * Computation Defines
