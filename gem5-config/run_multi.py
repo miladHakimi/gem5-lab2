@@ -65,7 +65,7 @@ from common import MemConfig
 from common import ObjectList
 from common.Caches import *
 from common import Options
-import MultiHWAcc
+import multi_acc
 
 def cmd_line_template():
     if options.command_line and options.command_line_file:
@@ -237,7 +237,7 @@ def build_test_system(np):
         MemConfig.config_mem(options, test_sys)
 
     if buildEnv['TARGET_ISA'] == "arm":
-        MultiHWAcc.makeHWAcc(options, test_sys)
+        multi_acc.makeHWAcc(options, test_sys)
 
     return test_sys
 
