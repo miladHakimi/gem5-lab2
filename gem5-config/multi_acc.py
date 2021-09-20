@@ -41,55 +41,59 @@ def makeHWAcc(options, system):
 
     ############################# Adding Accelerators to Cluster ##################################
 
+    for acc_name in ["vector", "vector2"]:
  # Add accelerator A1 to the cluster
-    acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/ir/" + "vector.ll"
-    # Specify the path to the config file for an accelerator
-    # acc_config = <Absolute path to the config file>
-    acc_config = options.accpath + "/" + options.accbench + "/" + "hw/configs/" + "vector.ini"
+        acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/ir/" + acc_name + ".ll"
+        # Specify the path to the config file for an accelerator
+        # acc_config = <Absolute path to the config file>
+        acc_config = options.accpath + "/" + options.accbench + "/" + "hw/configs/" + acc_name + ".ini"
 
-    print(acc_config)
+        print(acc_config)
 
-    system.acctest.acc = CommInterface(devicename="vector")
-    AccConfig(system.acctest.acc, acc_config, acc_bench)
+        setattr(system.acctest, acc_name, CommInterface(devicename=acc_name))
+        ACC = getattr(system.acctest,acc_name)
+        AccConfig(ACC, acc_config, acc_bench)
 
-    # Add an SPM for the accelerator
-    system.acctest.acc_spm = ScratchpadMemory()
-    AccSPMConfig(system.acctest.acc, system.acctest.acc_spm, acc_config)
-    system.acctest._connect_spm(system.acctest.acc_spm)
-
-    # Connect the accelerator to the system's interrupt controller
-    system.acctest.acc.gic = system.realview.gic
-
-    # Connect HWAcc to cluster buses
-    system.acctest._connect_hwacc(system.acctest.acc)
-    system.acctest.acc.local = system.acctest.local_bus.slave
-    system.acctest.acc.acp = system.acctest.coherency_bus.slave
-
-    # Enable display of debug messages for the accelerator
-    system.acctest.acc.enable_debug_msgs = True
+        # Add an SPM attribute to the cluster
+        setattr(system.acctest, acc_name+"_spm", ScratchpadMemory())
+        ACC_SPM = getattr(system.acctest,acc_name + "_spm")
+        AccSPMConfig(ACC, ACC_SPM, acc_config)
+        system.acctest._connect_spm(ACC_SPM)
 
 
-    ############################# A2 ##################################
-    # Specify the path to the benchmark file for an accelerator
+        # Connect the accelerator to the system's interrupt controller
+        ACC.gic = system.realview.gic
 
-    ############################# Adding Accelerators to Cluster ##################################
+        # Connect HWAcc to cluster buses
+        system.acctest._connect_hwacc(ACC)
+        ACC.local = system.acctest.local_bus.slave
+        ACC.acp = system.acctest.coherency_bus.slave
 
-    # Add accelerator A2 to the cluster
-    acc_A2_bench = options.accpath + "/" + options.accbench  + "/hw/ir/" + "vector2.ll"
-
-   #  # Specify the path to the config file for an accelerator
-   #  # acc_config = <Absolute path to the config file>
-    acc_A2_config = options.accpath + "/" + options.accbench + "/hw/configs/" + "vector2.ini"
-
-
-    system.acctest.acc_A2 = CommInterface(devicename="vector2")
-    AccConfig(system.acctest.acc_A2, acc_A2_config, acc_A2_bench)
+        # Enable display of debug messages for the accelerator
+        ACC.enable_debug_msgs = True
 
 
-    # Add an SPM for the accelerator
-    system.acctest.acc_spm_A2 = ScratchpadMemory()
-    AccSPMConfig(system.acctest.acc_A2, system.acctest.acc_spm_A2, acc_A2_config)
-    system.acctest._connect_spm(system.acctest.acc_spm_A2)
+#     ############################# A2 ##################################
+#     # Specify the path to the benchmark file for an accelerator
+
+#     ############################# Adding Accelerators to Cluster ##################################
+
+#     # Add accelerator A2 to the cluster
+#     acc_A2_bench = options.accpath + "/" + options.accbench  + "/hw/ir/" + "vector2.ll"
+
+#    #  # Specify the path to the config file for an accelerator
+#    #  # acc_config = <Absolute path to the config file>
+#     acc_A2_config = options.accpath + "/" + options.accbench + "/hw/configs/" + "vector2.ini"
+
+
+#     system.acctest.acc_A2 = CommInterface(devicename="vector2")
+#     AccConfig(system.acctest.acc_A2, acc_A2_config, acc_A2_bench)
+
+
+#     # Add an SPM for the accelerator
+#     system.acctest.acc_spm_A2 = ScratchpadMemory()
+#     AccSPMConfig(system.acctest.acc_A2, system.acctest.acc_spm_A2, acc_A2_config)
+#     system.acctest._connect_spm(system.acctest.acc_spm_A2)
 
     # Add an SPM for the accelerator
     # addr = 0x2F200000
@@ -104,15 +108,15 @@ def makeHWAcc(options, system):
 
 
     # Connect the accelerator to the system's interrupt controller
-    system.acctest.acc_A2.gic = system.realview.gic
+    # system.acctest.acc_A2.gic = system.realview.gic
 
-    # Connect HWAcc to cluster buses
-    system.acctest._connect_hwacc(system.acctest.acc_A2)
-    system.acctest.acc_A2.local = system.acctest.local_bus.slave
-    system.acctest.acc_A2.acp = system.acctest.coherency_bus.slave
+    # # Connect HWAcc to cluster buses
+    # system.acctest._connect_hwacc(system.acctest.acc_A2)
+    # system.acctest.acc_A2.local = system.acctest.local_bus.slave
+    # system.acctest.acc_A2.acp = system.acctest.coherency_bus.slave
 
-    # Enable display of debug messages for the accelerator
-    system.acctest.acc_A2.enable_debug_msgs = True
+    # # Enable display of debug messages for the accelerator
+    # system.acctest.acc_A2.enable_debug_msgs = True
     
     ################################## Adding DMAs to Cluster #####################################
     # Add DMA devices to the cluster and connect them
@@ -122,8 +126,8 @@ def makeHWAcc(options, system):
     # system.acctest.dma.pio = system.acctest.local_bus.master
 
     system.acctest.stream_dma_0 = StreamDma(pio_addr=0x2ff10000, pio_size=32, gic=system.realview.gic, max_pending=32)
-    system.acctest.stream_dma_0.stream_in = system.acctest.acc.stream
-    system.acctest.stream_dma_0.stream_out = system.acctest.acc.stream
+    system.acctest.stream_dma_0.stream_in = system.acctest.top.stream
+    system.acctest.stream_dma_0.stream_out = system.acctest.top.stream
     system.acctest.stream_dma_0.stream_addr=0x2ff10020
     system.acctest.stream_dma_0.stream_size=8
     system.acctest.stream_dma_0.pio_delay = '1ns'
@@ -132,8 +136,8 @@ def makeHWAcc(options, system):
     system.acctest._connect_dma(system, system.acctest.stream_dma_0)
 
     system.acctest.stream_dma_1 = StreamDma(pio_addr=0x2ff20000, pio_size=32, gic=system.realview.gic, max_pending=32)
-    system.acctest.stream_dma_1.stream_in = system.acctest.acc.stream
-    system.acctest.stream_dma_1.stream_out = system.acctest.acc.stream
+    system.acctest.stream_dma_1.stream_in = system.acctest.top.stream
+    system.acctest.stream_dma_1.stream_out = system.acctest.top.stream
     system.acctest.stream_dma_1.stream_addr=0x2ff20020
     system.acctest.stream_dma_1.stream_size=8
     system.acctest.stream_dma_1.pio_delay = '1ns'
