@@ -1,6 +1,6 @@
 FOLDERS=\
 	host\
-	bench
+	hw
 
 .PHONY: build clean all
 

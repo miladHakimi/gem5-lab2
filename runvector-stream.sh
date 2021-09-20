@@ -28,7 +28,7 @@ else
 	BINARY="${M5_PATH}/build/ARM/gem5.opt"
 fi
 
-KERNEL=$LAB_PATH/benchmarks/vector-stream/sw/main.elf
+KERNEL=$LAB_PATH/benchmarks/vector-stream/host/main.elf
 SYS_OPTS="--mem-size=4GB \
           --kernel=$KERNEL \
           --disk-image=$M5_PATH/baremetal/common/fake.iso \

@@ -1,4 +1,4 @@
-FOLDERS=hw sw
+FOLDERS=hw host
 
 .PHONY: build clean all
 

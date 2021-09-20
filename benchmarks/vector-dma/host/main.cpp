@@ -13,23 +13,24 @@ int main(void) {
   TYPE *m2 = (TYPE *)(base + sizeof(TYPE) * N);
   TYPE *m3 = (TYPE *)(base + 2 * sizeof(TYPE) * N);
   TYPE *check = (TYPE *)(base+3*sizeof(TYPE)*N);
-   common_val = 0;
-  // register int sp asm("sp");
-  // uint64_t base_input = 0x90c00000;
-  // uint32_t* input = (uint32_t*)0x90c00000;
+
+  // Check that the gem5 script loaded the data in binary files into the appropriate location in memory.
   for (int i = 0; i < N; i++) {
-            printf("%p %ld\n",m1+i,m1[i]);
+            printf("m1: %p %ld\n",m1+i,m1[i]);
   }
 
   for (int i = 0; i < N; i++) {
-            printf("%p %ld\n",m2+i,m2[i]);
+            printf("m2: %p %ld\n",m2+i,m2[i]);
   }
+
 #ifdef SPM
   TYPE *spm1 = (TYPE *)spm_base;
   TYPE *spm2 = (TYPE *)(spm_base + sizeof(TYPE) * N);
   TYPE *spm3 = (TYPE *)(spm_base + 2 * sizeof(TYPE) * N);
 #endif
 
+  // Passing the scratchpad pointers to accelerator
+  // Asking it to work of those addresses.
   val_a = (uint64_t)spm_base;
   val_b = (uint64_t)(spm_base + sizeof(TYPE) * N);
   val_c = (uint64_t)(spm_base + 2 * sizeof(TYPE) * N);
@@ -44,18 +45,18 @@ int main(void) {
   while (!pollDma());
   resetDma();
 
+  printf("Acc Activated: %d\n", acc);
   acc = 0x01;
-  printf("%d\n", acc);
   while (acc != 0x0) {
-    printf("%d\n", acc);
+    printf("Acc Status : %d\n", acc);
   }
+  printf("Acc Done : %d\n", acc);
+  acc = 0x00;
 
-#ifdef SPM
+  // Copy  results back from accelerator
   dmacpy(m3, spm3, sizeof(TYPE) * N);
   while (!pollDma());
   resetDma();
-#endif
-  acc = 0x00;
 
 #ifdef CHECK
    bool fail = false;

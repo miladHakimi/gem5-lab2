@@ -1,5 +1,8 @@
 #!/bin/bash
+# Uncomment if you want trace. Dumps txt trace. Do not enable for large programs.
 FLAGS="HWACC"
+# NoncoherentDma only dumps the copy from and to host
+#FLAGS="NoncoherentDma"
 BENCH=""
 DEBUG="false"
 PRINT_TO_FILE="false"
@@ -46,7 +49,11 @@ SYS_OPTS="--mem-size=4GB \
           --machine-type=VExpress_GEM5_V1 \
           --dtb-file=none --bare-metal \
           --cpu-type=DerivO3CPU"
-CACHE_OPTS="--caches --l2cache --acc_cache"
+# With acc cache
+#CACHE_OPTS="--caches --l2cache --acc_cache"
+# Without acc cache
+CACHE_OPTS="--caches --l2cache"
+
 # Script to start up full system simulation
 # --debug-flags=$FLAGS
 

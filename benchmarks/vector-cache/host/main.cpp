@@ -18,11 +18,11 @@ int main(void) {
   // uint64_t base_input = 0x90c00000;
   // uint32_t* input = (uint32_t*)0x90c00000;
   for (int i = 0; i < N; i++) {
-            printf("%p %ld\n",m1+i,m1[i]);
+            printf("m1: %p %ld\n",m1+i,m1[i]);
   }
 
   for (int i = 0; i < N; i++) {
-            printf("%p %ld\n",m2+i,m2[i]);
+            printf("m2: %p %ld\n",m2+i,m2[i]);
   }
 
   // Set up parameters for accelerators. 
