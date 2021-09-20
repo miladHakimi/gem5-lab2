@@ -85,15 +85,21 @@ def makeHWAcc(options, system):
     system.acctest.acc_A2 = CommInterface(devicename="vector2")
     AccConfig(system.acctest.acc_A2, acc_A2_config, acc_A2_bench)
 
+
     # Add an SPM for the accelerator
-    addr = 0x2F200000
-    spmRange = AddrRange(addr, addr+8096)
-    system.acctest.acc_A2_Buffer = ScratchpadMemory(range=spmRange)
-    system.acctest.acc_A2_Buffer.conf_table_reported = False
-    system.acctest.acc_A2_Buffer.ready_mode=True
-    system.acctest.acc_A2_Buffer.port = system.acctest.local_bus.master
-    for i in range(8):
-        system.acctest.acc_A2.spm = system.acctest.acc_A2_Buffer.spm_ports
+    system.acctest.acc_spm_A2 = ScratchpadMemory()
+    AccSPMConfig(system.acctest.acc_A2, system.acctest.acc_spm_A2, acc_A2_config)
+    system.acctest._connect_spm(system.acctest.acc_spm_A2)
+
+    # Add an SPM for the accelerator
+    # addr = 0x2F200000
+    # spmRange = AddrRange(addr, addr+8096)
+    # system.acctest.acc_A2_Buffer = ScratchpadMemory(range=spmRange)
+    # system.acctest.acc_A2_Buffer.conf_table_reported = False
+    # system.acctest.acc_A2_Buffer.ready_mode=True
+    # system.acctest.acc_A2_Buffer.port = system.acctest.local_bus.master
+    # for i in range(8):
+    #     system.acctest.acc_A2.spm = system.acctest.acc_A2_Buffer.spm_ports
 
 
 
