@@ -1,5 +1,7 @@
 *.pyc
 m5out
+*.elf
+*.ll
 .vscode
 results
 venv
