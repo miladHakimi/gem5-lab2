@@ -7,8 +7,8 @@ from HWAccConfig import *
 def buildHead(options, system, clstr):
     # Specify the path to the mobilenet accelerator descriptions
     hw_path = options.accpath + "/vector-stream/hw"
-    hw_config_path = hw_path + "/configs/head/"
-    hw_ir_path = hw_path + "/ir/head/"
+    hw_config_path = hw_path + "/configs/"
+    hw_ir_path = hw_path + "/ir/"
     local_low = 0x2F000000
     local_high = 0x2F001ADE
     local_range = AddrRange(local_low, local_high)

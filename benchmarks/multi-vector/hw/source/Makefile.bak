@@ -1,3 +1,4 @@
+CLUSTER = head
 LL = top.ll S1.ll S2.ll S3.ll
 
 # .PHONY clean build
@@ -9,7 +10,7 @@ LL = top.ll S1.ll S2.ll S3.ll
 %.ll : %.bc
 	llvm-dis -o $@ $<
 build: $(LL)
-	mkdir -p ../ir/
-	mv $^ ../ir/
+	mkdir -p ../ir/$(CLUSTER)
+	mv $^ ../ir/$(CLUSTER)/
 clean:
-	rm -f ../ir/*.ll
+	rm -f ../ir/$(CLUSTER)/*.ll

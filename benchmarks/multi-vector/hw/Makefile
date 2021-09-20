@@ -1,11 +1,11 @@
-TARGET=vector2.ll vector.ll top.ll
-%.o : %.c
-	clang -emit-llvm -c -o $@ $<
-%.bc : %.o
-	opt -O1 -mem2reg -simplifycfg -loops -loop-unroll -o $@ $<
-%.ll : %.bc
-	llvm-dis -o $@ $<
-build : $(TARGET)
+FOLDERS=source
+
+.PHONY: build clean all
+
+build:
+	@( for b in $(FOLDERS); do $(MAKE) -C $$b; done )
 
 clean:
-	rm -f *.ll
+	@( for b in $(FOLDERS); do $(MAKE) -C $$b clean || exit ; done )
+
+all: clean build

@@ -23,10 +23,10 @@ def makeHWAcc(options, system):
 
 
      # Add accelerator top to the cluster
-    acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/" + "top.ll"
+    acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/ir/" + "top.ll"
     # Specify the path to the config file for an accelerator
     # acc_config = <Absolute path to the config file>
-    acc_config = options.accpath + "/" + options.accbench + "/" + "hw/" + "top.ini"
+    acc_config = options.accpath + "/" + options.accbench + "/" + "hw/configs/" + "top.ini"
 
     print(acc_config)
 
@@ -42,10 +42,10 @@ def makeHWAcc(options, system):
     ############################# Adding Accelerators to Cluster ##################################
 
  # Add accelerator A1 to the cluster
-    acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/" + "vector.ll"
+    acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/ir/" + "vector.ll"
     # Specify the path to the config file for an accelerator
     # acc_config = <Absolute path to the config file>
-    acc_config = options.accpath + "/" + options.accbench + "/" + "hw/" + "vector.ini"
+    acc_config = options.accpath + "/" + options.accbench + "/" + "hw/configs/" + "vector.ini"
 
     print(acc_config)
 
@@ -75,11 +75,11 @@ def makeHWAcc(options, system):
     ############################# Adding Accelerators to Cluster ##################################
 
     # Add accelerator A2 to the cluster
-    acc_A2_bench = options.accpath + "/" + options.accbench  + "/hw/" + "vector2.ll"
+    acc_A2_bench = options.accpath + "/" + options.accbench  + "/hw/ir/" + "vector2.ll"
 
    #  # Specify the path to the config file for an accelerator
    #  # acc_config = <Absolute path to the config file>
-    acc_A2_config = options.accpath + "/" + options.accbench + "/hw/" + "vector2.ini"
+    acc_A2_config = options.accpath + "/" + options.accbench + "/hw/configs/" + "vector2.ini"
 
 
     system.acctest.acc_A2 = CommInterface(devicename="vector2")
