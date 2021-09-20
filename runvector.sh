@@ -1,8 +1,8 @@
 #!/bin/bash
 # Uncomment if you want trace. Dumps txt trace. Do not enable for large programs.
-FLAGS="HWACC"
+#FLAGS="HWACC,LLVMRuntime"
 # NoncoherentDma only dumps the copy from and to host
-#FLAGS="NoncoherentDma"
+FLAGS="NoncoherentDma"
 BENCH=""
 DEBUG="false"
 PRINT_TO_FILE="false"
