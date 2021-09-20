@@ -1,12 +1,16 @@
-CLUSTERS=\
-	head \
+CLUSTER = head
+LL = top.ll S1.ll S2.ll S3.ll
 
-.PHONY: build clean all
+# .PHONY clean build
 
-build:
-	@( for b in $(CLUSTERS); do $(MAKE) -C $$b; done )
-
+%.o : %.c
+	clang -emit-llvm -c -o $@ $<
+%.bc : %.o
+	opt -O1 -inline -mem2reg -simplifycfg -loops -loop-unroll -o $@ $<
+%.ll : %.bc
+	llvm-dis -o $@ $<
+build: $(LL)
+	mkdir -p ../ir/$(CLUSTER)
+	mv $^ ../ir/$(CLUSTER)/
 clean:
-	@( for b in $(CLUSTERS); do $(MAKE) -C $$b clean || exit ; done )
-
-all: clean build
+	rm -f ../ir/$(CLUSTER)/*.ll

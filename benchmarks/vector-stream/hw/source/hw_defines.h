@@ -1,4 +1,4 @@
-#include "../common/support.h"
+#include "../../defines.h"
 
 /***********************************************************
  * Computation Defines
