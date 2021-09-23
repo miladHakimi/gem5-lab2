@@ -9,6 +9,7 @@ int main(void) {
   m5_reset_stats();
   uint64_t base = 0x80c00000;
   uint64_t spm_base = 0x2f100000;
+  common_val = 0;
   TYPE *m1 = (TYPE *)base;
   TYPE *m2 = (TYPE *)(base + sizeof(TYPE) * N);
   TYPE *m3 = (TYPE *)(base + 2 * sizeof(TYPE) * N);
@@ -47,7 +48,7 @@ int main(void) {
 
   printf("Acc Activated: %d\n", acc);
   acc = 0x01;
-  while (acc != 0x0) {
+  while (common_val != 0x1) {
     printf("Acc Status : %d\n", acc);
   }
   printf("Acc Done : %d\n", acc);
@@ -56,6 +57,35 @@ int main(void) {
   // Copy  results back from accelerator
   dmacpy(m3, spm3, sizeof(TYPE) * N);
   while (!pollDma());
+  resetDma();
+
+  // Passing the scratchpad pointers to accelerator
+  // Asking it to work of those addresses.
+  val_a = (uint64_t)spm_base;
+  val_b = (uint64_t)(spm_base + sizeof(TYPE) * N);
+  val_c = (uint64_t)(spm_base + 2 * sizeof(TYPE) * N);
+
+  dmacpy(spm1, m1, sizeof(TYPE) * N);
+  while (!pollDma())
+    ;
+  resetDma();
+  dmacpy(spm2, m2, sizeof(TYPE) * N);
+  while (!pollDma())
+    ;
+  resetDma();
+
+  printf("Acc Activated: %d\n", acc);
+  acc = 0x01;
+  while (common_val != 0x2) {
+    printf("Acc Status : %d\n", acc);
+  }
+  printf("Acc Done : %d\n", acc);
+  acc = 0x00;
+
+  // Copy  results back from accelerator
+  dmacpy(m3, spm3, sizeof(TYPE) * N);
+  while (!pollDma())
+    ;
   resetDma();
 
 #ifdef CHECK
