@@ -42,7 +42,7 @@ def makeHWAcc(options, system):
     ############################# Adding Accelerators to Cluster ##################################
 
     for acc_name in ["vector", "vector2"]:
- # Add accelerator A1 to the cluster
+        # Add accelerator A1 to the cluster
         acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/ir/" + acc_name + ".ll"
         # Specify the path to the config file for an accelerator
         # acc_config = <Absolute path to the config file>
