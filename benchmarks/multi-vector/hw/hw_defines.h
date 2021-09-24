@@ -13,8 +13,8 @@
 
 // Device MMR addresses
 #define TOP 0x2f000000
-#define GEMM 0x2f0000F0
-#define GEMM_V2 0x2f000100
+#define V1  0x2f0000F0
+#define V2  0x2f000100
 #define DMA 0x2ff00000
 
 // Specify the scratchpad addresses for variables

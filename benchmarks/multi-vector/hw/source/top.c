@@ -6,14 +6,14 @@ void top(uint64_t m1_addr,
 {
 
 	//Define Device MMRs
-	volatile uint8_t *GEMMFlags = (uint8_t *)GEMM;
-	volatile uint8_t *GEMMFlags_V2 = (uint8_t *)GEMM_V2;
+	volatile uint8_t *V1Flags = (uint8_t *)V1;
+	volatile uint8_t *V2Flags = (uint8_t *)V2;
 	volatile uint8_t *DmaFlags = (uint8_t *)(DMA);
 	volatile uint64_t *DmaRdAddr = (uint64_t *)(DMA + 1);
 	volatile uint64_t *DmaWrAddr = (uint64_t *)(DMA + 9);
 	volatile uint32_t *DmaCopyLen = (uint32_t *)(DMA + 17);
-	*GEMMFlags = 0x0;
-	*GEMMFlags_V2 = 0x0;
+	*V1Flags = 0x0;
+	*V2Flags = 0x0;
 	//Transfer Input Matrices
 	//Transfer M1
 	*DmaRdAddr = m1_addr;
@@ -33,15 +33,15 @@ void top(uint64_t m1_addr,
 		;
 
 	//Start the accelerated function
-	*GEMMFlags = DEV_INIT;
+	*V1Flags = DEV_INIT;
 	//Poll function for finish
-	while ((*GEMMFlags & DEV_INTR) != DEV_INTR)
+	while ((*V1Flags & DEV_INTR) != DEV_INTR)
 		;
 
 	// Invoke accelerator 2
 
 	//Transfer Input Matrices
-	//Transfer M1
+	//Transfer the output of V1 to V2. 
 	*DmaRdAddr = M3ADDR;
 	*DmaWrAddr = M1ADDR_V2;
 	*DmaCopyLen = vector_size;
@@ -49,20 +49,20 @@ void top(uint64_t m1_addr,
 	// //Poll DMA for finish
 	while ((*DmaFlags & DEV_INTR) != DEV_INTR)
 		;
-	//	Transfer M2
 
-	*DmaRdAddr = M3ADDR;
-	*DmaWrAddr = M2ADDR_V2;
-	*DmaCopyLen = vector_size;
-	*DmaFlags = DEV_INIT;
-	//Poll DMA for finish
-	while ((*DmaFlags & DEV_INTR) != DEV_INTR)
-		;
+	// //	Transfer M2
+	// *DmaRdAddr = M3ADDR;
+	// *DmaWrAddr = M2ADDR_V2;
+	// *DmaCopyLen = vector_size;
+	// *DmaFlags = DEV_INIT;
+	// //Poll DMA for finish
+	// while ((*DmaFlags & DEV_INTR) != DEV_INTR)
+	// 	;
 
 	//Start the accelerated function
-	*GEMMFlags_V2 = DEV_INIT;
+	*V2Flags = DEV_INIT;
 	//Poll function for finish
-	while ((*GEMMFlags_V2 & DEV_INTR) != DEV_INTR)
+	while ((*V2Flags & DEV_INTR) != DEV_INTR)
 		;
 
 	//Transfer M3
