@@ -1,5 +1,5 @@
 #!/bin/bash
-FLAGS="HWACC"
+FLAGS="HWACC,LLVMRuntime,LLVMInterface"
 BENCH=""
 DEBUG="false"
 PRINT_TO_FILE="false"
