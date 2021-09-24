@@ -25,9 +25,9 @@ int main(void) {
   // Set up parameters for accelerators.
   // Base address of m1, Base address of m2, Base address of result.
   // All addresses are in CPU space
-  val_a = (uint64_t)base;
-  val_b = (uint64_t)(base + sizeof(TYPE) * N);
-  val_c = (uint64_t)(base + 2 * sizeof(TYPE) * N);
+  arg1 = (uint64_t)base;
+  arg2 = (uint64_t)(base + sizeof(TYPE) * N);
+  arg3 = (uint64_t)(base + 2 * sizeof(TYPE) * N);
 
   // NO DMA required. As accelerator directly reaches into CPU space.
 
