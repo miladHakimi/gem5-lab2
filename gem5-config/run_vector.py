@@ -134,7 +134,7 @@ def build_test_system(np):
         test_sys.kernel_extras = [os.environ["LAB_PATH"]+"/benchmarks/inputs/m0.bin",os.environ["LAB_PATH"]+"/benchmarks/inputs/m1.bin"]
         test_sys.kernel_extras_addrs = [0x80c00000,0x80c00000+os.path.getsize(os.environ["LAB_PATH"]+"/benchmarks/inputs/m0.bin")]
         print("Loading file m0 at" + str(hex(0x80c00000)))
-        print("Loading file m0 at" + str(hex(0x80c00000 + os.path.getsize(os.environ["LAB_PATH"]+"/benchmarks/inputs/m0.bin"))))
+        print("Loading file m1 at" + str(hex(0x80c00000 + os.path.getsize(os.environ["LAB_PATH"]+"/benchmarks/inputs/m0.bin"))))
     else:
         print("Error: a kernel must be provided to run in full system mode")
         sys.exit(1)
