@@ -28,7 +28,7 @@ int main(void) {
   // printf("%d\n", *top);
   *top = 0x01;
   int count;
-  while (top != 0)
+  while (*top != 0)
     count++;
   printf("Job complete\n");
 #ifdef CHECK
