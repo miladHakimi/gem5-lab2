@@ -41,7 +41,7 @@ OUTDIR=BM_ARM_OUT/vector-stream
 
 RUN_SCRIPT="$BINARY --outdir=$OUTDIR \
 			gem5-config/run_vector_stream.py $SYS_OPTS \
-			--accpath=$LAB_PATH/benchmarks $CACHE_OPTS"
+			--accpath=$LAB_PATH/benchmarks --accbench=vector-stream $CACHE_OPTS"
 
 if [ "${PRINT_TO_FILE}" == "true" ]; then
 	mkdir -p $OUTDIR

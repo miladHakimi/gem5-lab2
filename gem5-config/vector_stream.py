@@ -4,9 +4,9 @@ from m5.util import *
 import ConfigParser
 from HWAccConfig import *
 
-def buildHead(options, system, clstr):
+def buildcluster(options, system, clstr):
     # Specify the path to the mobilenet accelerator descriptions
-    hw_path = options.accpath + "/vector-stream/hw"
+    hw_path = options.accpath + "/" + options.accbench + "/hw"
     hw_config_path = hw_path + "/configs/"
     hw_ir_path = hw_path + "/ir/"
     local_low =  0x2F000000
@@ -39,60 +39,64 @@ def buildHead(options, system, clstr):
     clstr._connect_dma(system, clstr.stream_dma0)
 
     # Add the cluster DMA
-    # Add DMA devices to the cluster and connect them
     clstr.dma = NoncoherentDma(pio_addr=0x2ff00000, pio_size=24, gic=system.realview.gic, max_pending=32, int_num=95)
     clstr._connect_cluster_dma(system, clstr.dma)
 
-    # Add the S1
-    acc = "S1"
-    config = hw_config_path + acc + ".ini"
-    ir = hw_ir_path + acc + ".ll"
-    clstr.S1 = CommInterface(devicename=acc, gic=gic)
-    AccConfig(clstr.S1, config, ir)
-    clstr._connect_hwacc(clstr.S1)
+    # Create Accelerators
+    for acc_name in ["S1", "S2", "S3"]:
+        # Add accelerators to the cluster
+        acc_bench = options.accpath + "/" + options.accbench + "/" + "hw/ir/" + acc_name + ".ll"
+        # Specify the path to the config file for an accelerator
+        # acc_config = <Absolute path to the config file>
+        acc_config = options.accpath + "/" + options.accbench + "/" + "hw/configs/" + acc_name + ".ini"
+
+        print(acc_config)
+
+        setattr(clstr, acc_name, CommInterface(devicename=acc_name))
+        ACC = getattr(clstr,acc_name)
+        AccConfig(ACC, acc_config, acc_bench)
+
+        # Add an SPM attribute to the cluster
+        setattr(clstr, acc_name+"_spm", ScratchpadMemory())
+        ACC_SPM = getattr(clstr,acc_name + "_spm")
+        AccSPMConfig(ACC, ACC_SPM, acc_config)
+        clstr._connect_spm(ACC_SPM)
+
+
+        # Connect the accelerator to the system's interrupt controller
+        ACC.gic = system.realview.gic
+
+        # Connect HWAcc to cluster buses
+        clstr._connect_hwacc(ACC)
+        ACC.local = clstr.local_bus.slave
+        ACC.acp = clstr.coherency_bus.slave
+
+        # Enable display of debug messages for the accelerator
+        ACC.enable_debug_msgs = True
+
+
+    # Wire up streams
+    # DRAM->S1
     clstr.S1.stream = clstr.stream_dma0.stream_out
-    clstr.S1.enable_debug_msgs = True
-
-    addr = 0x2F100000
-    spmRange = AddrRange(addr, addr+(160*2*3))
-    clstr.S1Buffer = ScratchpadMemory(range=spmRange)
-    clstr.S1Buffer.conf_table_reported = False
-    clstr.S1Buffer.ready_mode=True
-    clstr.S1Buffer.port = clstr.local_bus.master
-    for i in range(1):
-        clstr.S1.spm = clstr.S1Buffer.spm_ports
-
+    
+    # S1->S2
     addr = local_low + 0x3000
     clstr.S1Out = StreamBuffer(stream_address=addr, stream_size=1, buffer_size=8)
+    clstr.S1Out.stream_size = 8
     clstr.S1.stream = clstr.S1Out.stream_in
-
-    # Add the Depthwise Convolution
-    acc = "S2"
-    config = hw_config_path + acc + ".ini"
-    ir = hw_ir_path + acc + ".ll"
-    clstr.S2 = CommInterface(devicename=acc, gic=gic)
-    AccConfig(clstr.S2, config, ir)
-    clstr._connect_hwacc(clstr.S2)
     clstr.S2.stream = clstr.S1Out.stream_out
-    
 
+    # S2->S3
     addr = local_low + 0x4000
     clstr.S2Out = StreamBuffer(stream_address=addr, stream_size=1, buffer_size=8)
+    clstr.S2Out.stream_size = 8
     clstr.S2.stream = clstr.S2Out.stream_in
-    clstr.S2.enable_debug_msgs = True
-    
-    # Add the Pointwise Convolution
-    acc = "S3"
-    config = hw_config_path + acc + ".ini"
-    ir = hw_ir_path + acc + ".ll"
-    clstr.S3 = CommInterface(devicename=acc, gic=gic)
-    AccConfig(clstr.S3, config, ir)
-    clstr._connect_hwacc(clstr.S3)
     clstr.S3.stream = clstr.S2Out.stream_out
+
+    # S3->DRAM
     clstr.S3.stream = clstr.stream_dma0.stream_in
-    clstr.S3.enable_debug_msgs = True
 
 def makeHWAcc(options, system):
     system.head = AccCluster()
-    buildHead(options, system, system.head)
+    buildcluster(options, system, system.head)
 
