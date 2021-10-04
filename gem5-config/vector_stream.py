@@ -9,8 +9,8 @@ def buildHead(options, system, clstr):
     hw_path = options.accpath + "/vector-stream/hw"
     hw_config_path = hw_path + "/configs/"
     hw_ir_path = hw_path + "/ir/"
-    local_low = 0x2F000000
-    local_high = 0x2F001ADE
+    local_low =  0x2F000000
+    local_high = 0x2FFFFFFF
     local_range = AddrRange(local_low, local_high)
     external_range = [AddrRange(0x00000000, local_low-1),
                       AddrRange(local_high+1, 0xFFFFFFFF)]
@@ -29,9 +29,9 @@ def buildHead(options, system, clstr):
     clstr.top.enable_debug_msgs = True
 
     # Add the Stream DMAs
-    addr = local_low + 0x0041
+    addr = 0x2fe00000
     clstr.stream_dma0 = StreamDma(pio_addr=addr, pio_size=32, gic=gic, max_pending=32)
-    clstr.stream_dma0.stream_addr=addr+32
+    clstr.stream_dma0.stream_addr= local_low + 0x1000
     clstr.stream_dma0.stream_size=8
     clstr.stream_dma0.pio_delay='1ns'
     clstr.stream_dma0.rd_int = 210
@@ -39,11 +39,11 @@ def buildHead(options, system, clstr):
     clstr._connect_dma(system, clstr.stream_dma0)
 
     # Add the cluster DMA
-    addr = local_low + 0x00069
-    clstr.dma = NoncoherentDma(pio_addr=addr, pio_size=21, gic=gic, int_num=95)
+    # Add DMA devices to the cluster and connect them
+    clstr.dma = NoncoherentDma(pio_addr=0x2ff00000, pio_size=24, gic=system.realview.gic, max_pending=32, int_num=95)
     clstr._connect_cluster_dma(system, clstr.dma)
 
-    # Add the Normal Convolution
+    # Add the S1
     acc = "S1"
     config = hw_config_path + acc + ".ini"
     ir = hw_ir_path + acc + ".ll"
@@ -53,7 +53,7 @@ def buildHead(options, system, clstr):
     clstr.S1.stream = clstr.stream_dma0.stream_out
     clstr.S1.enable_debug_msgs = True
 
-    addr = local_low + 0x0081
+    addr = 0x2F100000
     spmRange = AddrRange(addr, addr+(160*2*3))
     clstr.S1Buffer = ScratchpadMemory(range=spmRange)
     clstr.S1Buffer.conf_table_reported = False
@@ -62,7 +62,7 @@ def buildHead(options, system, clstr):
     for i in range(1):
         clstr.S1.spm = clstr.S1Buffer.spm_ports
 
-    addr = local_low + 0x0774
+    addr = local_low + 0x3000
     clstr.S1Out = StreamBuffer(stream_address=addr, stream_size=1, buffer_size=8)
     clstr.S1.stream = clstr.S1Out.stream_in
 
@@ -76,7 +76,7 @@ def buildHead(options, system, clstr):
     clstr.S2.stream = clstr.S1Out.stream_out
     
 
-    addr = local_low + 0x18E5
+    addr = local_low + 0x4000
     clstr.S2Out = StreamBuffer(stream_address=addr, stream_size=1, buffer_size=8)
     clstr.S2.stream = clstr.S2Out.stream_in
     clstr.S2.enable_debug_msgs = True
