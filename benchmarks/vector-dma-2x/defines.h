@@ -13,6 +13,6 @@
 #define CHECK
 
 #define TYPE uint32_t
-#define N 16
+#define N 8
 
 #endif

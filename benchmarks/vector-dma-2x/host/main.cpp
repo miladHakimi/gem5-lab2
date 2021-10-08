@@ -10,16 +10,16 @@ int main(void) {
   uint64_t base = 0x80c00000;
   uint64_t spm_base = 0x2f100000;
   TYPE *m1 = (TYPE *)base;
-  TYPE *m2 = (TYPE *)(base + sizeof(TYPE) * N);
-  TYPE *m3 = (TYPE *)(base + 2 * sizeof(TYPE) * N);
-  TYPE *check = (TYPE *)(base+3*sizeof(TYPE)*N);
+  TYPE *m2 = (TYPE *)(base + sizeof(TYPE) * 16);
+  TYPE *m3 = (TYPE *)(base + 2 * sizeof(TYPE) * 16);
+  TYPE *check = (TYPE *)(base+3*sizeof(TYPE)*16);
 
   // Check that the gem5 script loaded the data in binary files into the appropriate location in memory.
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i < 16; i++) {
             printf("m1: %p %ld\n",m1+i,m1[i]);
   }
 
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i < 16; i++) {
             printf("m2: %p %ld\n",m2+i,m2[i]);
   }
 
@@ -67,10 +67,10 @@ int main(void) {
   printf("%d\n", acc);
   // acc = 0x01;
 
-  dmacpy(spm1, m1, sizeof(TYPE) * N);
+  dmacpy(spm1, m1 + N, sizeof(TYPE) * N);
   while (!pollDma());
   resetDma();
-  dmacpy(spm2, m2, sizeof(TYPE) * N);
+  dmacpy(spm2, m2 + N, sizeof(TYPE) * N);
   while (!pollDma());
   resetDma();
 
@@ -83,7 +83,7 @@ int main(void) {
   acc = 0x00;
 
   // Copy  results back from accelerator
-  dmacpy(m3, spm3, sizeof(TYPE) * N);
+  dmacpy(m3 + N, spm3, sizeof(TYPE) * N);
   while (!pollDma());
   resetDma();
 
