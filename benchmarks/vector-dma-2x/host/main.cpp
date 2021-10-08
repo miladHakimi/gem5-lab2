@@ -16,11 +16,11 @@ int main(void) {
 
   // Check that the gem5 script loaded the data in binary files into the appropriate location in memory.
   for (int i = 0; i < 16; i++) {
-            printf("m1: %p %ld\n",m1+i,m1[i]);
+            printf("m1: %p %ld\n \0",m1+i,m1[i]);
   }
 
   for (int i = 0; i < 16; i++) {
-            printf("m2: %p %ld\n",m2+i,m2[i]);
+            printf("m2: %p %ld\n \0",m2+i,m2[i]);
   }
 
 #ifdef SPM
