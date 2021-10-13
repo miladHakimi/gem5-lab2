@@ -28,7 +28,7 @@ else
 	BINARY="${M5_PATH}/build/ARM/gem5.opt"
 fi
 
-KERNEL=$LAB_PATH/benchmarks/vector-stream/host/main.elf
+KERNEL=$LAB_PATH/benchmarks/vector_stream/host/main.elf
 SYS_OPTS="--mem-size=4GB \
           --kernel=$KERNEL \
           --disk-image=$M5_PATH/baremetal/common/fake.iso \
@@ -37,11 +37,11 @@ SYS_OPTS="--mem-size=4GB \
           --cpu-type=DerivO3CPU"
 CACHE_OPTS="--caches --l2cache --acc_cache"
 
-OUTDIR=BM_ARM_OUT/vector-stream
+OUTDIR=BM_ARM_OUT/vector_stream
 
 RUN_SCRIPT="$BINARY --outdir=$OUTDIR \
 			gem5-config/run_vector_stream.py $SYS_OPTS \
-			--accpath=$LAB_PATH/benchmarks --accbench=vector-stream $CACHE_OPTS"
+			--accpath=$LAB_PATH/benchmarks --accbench=vector_stream $CACHE_OPTS"
 
 if [ "${PRINT_TO_FILE}" == "true" ]; then
 	mkdir -p $OUTDIR
