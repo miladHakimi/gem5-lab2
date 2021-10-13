@@ -1,4 +1,4 @@
-KERN=vector-cache
+KERN=vector_cache
 TARGET=$(KERN).ll
 %.o : %.c
 	clang -emit-llvm -c -o $@ $<
