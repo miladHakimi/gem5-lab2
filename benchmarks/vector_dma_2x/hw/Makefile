@@ -1,4 +1,4 @@
-KERN=vector-dma-2x
+KERN=vector_dma_2x
 TARGET=$(KERN).ll
 %.o : %.c
 	clang -emit-llvm -c -o $@ $<
