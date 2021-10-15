@@ -43,7 +43,7 @@ else
 fi
 
 KERNEL=$LAB_PATH/benchmarks/$BENCH/host/main.elf
-SYS_OPTS="--mem-size=4GB \
+SYS_OPTS="--mem-size=8GB \
           --kernel=$KERNEL \
           --disk-image=$M5_PATH/baremetal/common/fake.iso \
           --machine-type=VExpress_GEM5_V1 \
