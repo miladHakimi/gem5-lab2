@@ -11,23 +11,38 @@ void top(uint64_t m1_addr, uint64_t m2_addr, uint64_t m3_addr) {
   volatile uint32_t *DmaCopyLen = (uint32_t *)(DMA + 17);
   *V1Flags = 0x0;
   *V2Flags = 0x0;
+  *DmaFlags = 0x0;
+
   // Transfer Input Matrices
   // Transfer M1
   *DmaRdAddr = m1_addr;
   *DmaWrAddr = M1ADDR;
   *DmaCopyLen = vector_size;
+  // Fence it
+  while (*DmaFlags != 0x0)
+    ;
   *DmaFlags = DEV_INIT;
   // Poll DMA for finish
   while ((*DmaFlags & DEV_INTR) != DEV_INTR)
     ;
+  // Reset DMA
+  *DmaFlags = 0x0;  
+  
+  
   // Transfer M2
   *DmaRdAddr = m2_addr;
   *DmaWrAddr = M2ADDR;
   *DmaCopyLen = vector_size;
+
+  // Fence it
+  while (*DmaFlags != 0x0)
+    ;
   *DmaFlags = DEV_INIT;
   // Poll DMA for finish
   while ((*DmaFlags & DEV_INTR) != DEV_INTR)
     ;
+  // Reset DMA
+  *DmaFlags = 0x0;
 
   // Check if accelerator ready for kickstarting
   while (*V1Flags != 0x0)
