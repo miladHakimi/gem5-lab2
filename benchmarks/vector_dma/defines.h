@@ -7,6 +7,8 @@
 #define val_a      *(int *)0x2f000001
 #define val_b      *(int *)0x2f000009
 #define val_c      *(int *)0x2f000011
+// #define val_d      *(unsigned *)0x2f000019
+
 #define rcIndex     (r*ROW + c)
 
 #define SPM
